@@ -32,3 +32,7 @@ python -m http.server
 ```
 
 Sub-projects are accessible at `/physsim`, `/biosim`, `/gerry` when their folders are siblings inside the served root.
+
+## License
+
+[AGPL-3.0](LICENSE)
