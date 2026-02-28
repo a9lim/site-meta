@@ -62,16 +62,16 @@ These values **must match** across all four projects (enforced by `shared-tokens
 | Token | Value |
 |-------|-------|
 | Accent | `#FE3B01` |
-| Accent light | `#FF6B3D` |
-| Light canvas | `#F0EDE4` |
+| Accent light | `#FF7642` |
+| Light canvas | `#F0EBE4` |
 | Dark canvas | `#0C0B09` |
-| Light panel | `#FCFAF4` |
-| Dark panel | `#181612` |
+| Light panel | `#FCF7F2` |
+| Dark panel | `#1A1510` |
 | Light text | `#1A1612` |
-| Dark text | `#E8E2D4` |
-| Font display | Instrument Serif |
-| Font body | Geist |
-| Font mono | Geist Mono |
+| Dark text | `#E8DED4` |
+| Font display | Noto Serif |
+| Font body | Noto Sans |
+| Font mono | Noto Sans Mono |
 | Shadow sm/md/lg | 3-tier system (same hex alpha values) |
 | Glass effect | `backdrop-filter: blur(24px) saturate(1.3)` |
 | Border radius | `8px / 14px / 20px / 9999px` |
@@ -139,16 +139,16 @@ All four projects use these exact CSS variable names for shared tokens:
 
 | Key | Hex | Used by |
 |-----|-----|---------|
-| `blue` | `#5898ba` | biosim (Krebs), gerry (Blue party) |
-| `green` | `#52a87a` | biosim (Calvin), gerry (Green/minority) |
-| `slate` | `#847a70` | biosim (neutral), gerry (None), physsim (neutral particle) |
-| `orange` | `#d9924c` | biosim (Glycolysis), gerry (Yellow party) |
-| `rose` | `#c85c74` | biosim (PPP), gerry (Red party) |
-| `purple` | `#a882bc` | biosim (Cyclic) |
-| `brown` | `#9e6842` | biosim (Fermentation) |
-| `red` | `#cc4c3c` | biosim (Protons) |
-| `cyan` | `#48b4aa` | biosim (Electrons) |
-| `yellow` | `#dbb850` | biosim (Photons) |
+| `blue` | `#5C92A8` | biosim (Krebs), gerry (Blue party) |
+| `green` | `#509878` | biosim (Calvin), gerry (Green/minority) |
+| `slate` | `#8A7E72` | biosim (neutral), gerry (None), physsim (neutral particle) |
+| `orange` | `#CC8E4E` | biosim (Glycolysis), gerry (Yellow party) |
+| `rose` | `#C46272` | biosim (PPP), gerry (Red party) |
+| `purple` | `#9C7EB0` | biosim (Cyclic) |
+| `brown` | `#9C6840` | biosim (Fermentation) |
+| `red` | `#C05048` | biosim (Protons) |
+| `cyan` | `#4AACA0` | biosim (Electrons) |
+| `yellow` | `#CCA84C` | biosim (Photons) |
 
 ## Cross-Repo Changes
 
