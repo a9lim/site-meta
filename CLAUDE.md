@@ -29,10 +29,12 @@ npx serve .
 
 ### Shared Files (in `a9lim.github.io/`)
 
-Two files at the root site are loaded by all four projects via absolute paths (`/shared-tokens.js`, `/shared-base.css`):
+Four files at the root site are loaded by all four projects via absolute paths:
 
 - **`shared-tokens.js`**: Color math helpers (`_r`, `_parseHex`, `_rgb2hsl`, `_hsl2hex`, `_darken`), `_FONT`, and `_PALETTE` (shared surface/text/accent/shadow tokens plus `extended` sub-object with 10 cross-project colors). Loaded as a plain `<script>` in `<head>` before project-specific `colors.js`.
-- **`shared-base.css`**: Reset, `:root` layout tokens (`--radius-*`, `--toolbar-h: 52px`, `--panel-w: 350px`, `--ease-*`), body base, `.glass`, `.tool-btn` (34×34 sim-style with SVG defaults), shared keyframes, intro screen, sidebar stat patterns (`.group-label`, `.stats-header`, `.stat-row`, `.stat-value`, `.stat-group`), tab system (`.tabs-wrap`, `.tab-bar`, `.tab-btn`, `.tab-panels`, `.tab-panel`), control group/row (`.ctrl-group`, `.ctrl-row`), `.slider-value`, preset dialog (`.preset-dialog`, `.preset-content`, `.preset-grid`, `.preset-card`), shared responsive breakpoints (900px/600px/440px toolbar/brand/sep rules), `.hide-sm`, form controls (range sliders, `.mode-toggles`, checkboxes, `.ghost-btn`), and `prefers-reduced-motion`.
+- **`shared-utils.js`**: Utility functions used across all projects: `escapeHtml()`, `debounce()`, `throttle()`, `clamp()`, `lerp()`, `cubicBezier()` (Newton-Raphson CSS bezier solver), `showToast()`. Loaded after `shared-tokens.js`.
+- **`shared-camera.js`**: Reusable viewport/camera module via `createCamera(opts)`. Supports zoom/pan with mouse wheel, touch pinch, middle-click pan. Coordinate transforms (`screenToWorld`/`worldToScreen`), Canvas 2D (`applyToCanvas`) and SVG (`getViewBox`/`setFromViewBox`) integration, animated transitions, configurable bounds/easing. `bindZoomButtons(opts)` wires zoom-in/out/reset buttons and a zoom percentage display to the camera with animated zoom (default 1.25× factor, 200ms easeOutCubic). Loaded by the 3 sim projects (not root site).
+- **`shared-base.css`**: Reset, `:root` layout tokens (`--radius-*`, `--toolbar-h: 52px`, `--panel-w: 350px`, `--ease-*`), body base, `.glass`, `.tool-btn` (34×34 sim-style with SVG defaults), shared keyframes, intro screen, sidebar stat patterns (`.group-label`, `.stats-header`, `.stat-row`, `.stat-value`, `.stat-group`), sim layout components (`.sim-toolbar`, `.sim-panel`, `.sim-bar`, `.sim-controls`), small utilities (`.zoom-level`, `.ctrl-sep`, `.scrollbar-thin`, `.panel-hint`), toast notifications, shared responsive breakpoints (900px/600px/440px toolbar/brand/sep rules), `.hide-sm`, and `prefers-reduced-motion`.
 
 ### HTML `<head>` Loading Order
 
@@ -41,7 +43,9 @@ All four projects follow this order in `<head>`:
 2. `<link rel="stylesheet" href="/shared-base.css">` (relative `shared-base.css` on root site)
 3. `<link rel="stylesheet" href="styles.css">` (project-specific overrides)
 4. `<script src="/shared-tokens.js"></script>` (relative on root site)
-5. `<script src="colors.js"></script>` (project-specific color extensions)
+5. `<script src="/shared-utils.js"></script>` (relative on root site)
+6. `<script src="/shared-camera.js"></script>` (sim projects only; relative on root site)
+7. `<script src="colors.js"></script>` (project-specific color extensions)
 
 ### colors.js Contract
 
@@ -88,10 +92,11 @@ The three simulation projects share these layout conventions (root site uses a t
 - **`.glass` utility class** (shared-base.css): semi-transparent bg + blur + border + shadow
 - **`.tool-btn`** pattern (shared-base.css): 34×34 icon buttons with SVG defaults. Root site overrides to 36×36.
 - **Sidebar stat patterns** (shared-base.css): `.group-label`, `.stats-header`, `.stat-row`, `.stat-value` — used by biosim and gerry
-- **Tab system** (shared-base.css): `.tabs-wrap`, `.tab-bar`, `.tab-btn`, `.tab-panels`, `.tab-panel` — used by biosim sidebar
-- **Control group/row** (shared-base.css): `.ctrl-group`, `.ctrl-row` — used by biosim and physsim
-- **Slider value** (shared-base.css): `.slider-value` — monospace numeric display
-- **Preset dialog** (shared-base.css): `.preset-dialog`, `.preset-content`, `.preset-grid`, `.preset-card` — used by physsim
+- **Toast notifications** (shared-base.css): `#toast-container`, `.toast` — used by all sims via `showToast()` from `shared-utils.js`
+- **Tab system** (biosim `styles.css`): `.tabs-wrap`, `.tab-bar`, `.tab-btn`, `.tab-panels`, `.tab-panel` — biosim sidebar only
+- **Control group/row** (biosim `styles.css`): `.ctrl-group`, `.ctrl-row` — biosim only
+- **Preset dialog** (physsim `styles.css`): `.preset-dialog`, `.preset-content`, `.preset-grid`, `.preset-card` — physsim only
+- **Form controls** (physsim `styles.css`): `.slider-value`, range sliders, `.mode-toggles`, checkboxes, `.ghost-btn` — physsim only
 - **Shared responsive blocks** (shared-base.css): toolbar, brand, separator rules at 900px/600px/440px — all sims inherit
 
 ### Typography
@@ -166,7 +171,7 @@ When modifying **project-specific** tokens:
 
 Each sub-folder's `CLAUDE.md` has full architecture docs. Key differences:
 
-- **a9lim.github.io** (root site): ES6 modules, traditional page layout (not floating panels over canvas). Hosts `shared-tokens.js` and `shared-base.css`. Overrides `--toolbar-h: 56px` and `.tool-btn` to 36×36. WebGL shader background. `main.js` + `src/` subdirectory (projects, projects-page, router, theme, animations, shader, carousel, blog, world-map, markdown). Carousel and projects page cards are rendered dynamically from a shared `PROJECTS` data array in `src/projects.js`.
-- **physsim**: ES6 modules (`import`/`export`), Canvas 2D rendering, `window.sim` global instance, `src/` subdirectory (physics, quadtree, vec2, renderer, input, particle, presets, ui). Preset dialog uses shared `.preset-dialog` class. Responsive merges to single 900px breakpoint (bottom sheet + toolbar).
-- **biosim**: ES6 modules (`import`/`export`), Canvas 2D, `_BASE`/`_ROLE`/`_THEME` color pipeline. `main.js` + `src/` subdirectory with `src/reactions/` for pathway logic. Theme toggle on `<body>` (not `<html>`). Three-state theme: Simulation/Light/Dark. Uses shared tab system for sidebar. Responsive at 900px/600px.
+- **a9lim.github.io** (root site): ES6 modules, traditional page layout (not floating panels over canvas). Hosts `shared-tokens.js`, `shared-utils.js`, `shared-camera.js`, and `shared-base.css`. Overrides `--toolbar-h: 56px` and `.tool-btn` to 36×36. WebGL shader background (on-demand rendering). `main.js` + `src/` subdirectory (projects, projects-page, card-effects, router, theme, animations, shader, carousel, blog, world-map, markdown). Carousel and projects page cards are rendered dynamically from a shared `PROJECTS` data array in `src/projects.js`. Blog has loading skeletons. Footer has social links and nav.
+- **physsim**: ES6 modules (`import`/`export`), Canvas 2D rendering, `window.sim` global instance, `src/` subdirectory (physics, quadtree, vec2, renderer, input, particle, presets, ui, config, relativity). Uses `shared-camera.js` for viewport management. Preset dialog and form controls CSS in project `styles.css`. Responsive merges to single 900px breakpoint (bottom sheet + toolbar).
+- **biosim**: ES6 modules (`import`/`export`), Canvas 2D, `_BASE`/`_ROLE`/`_THEME` color pipeline. `main.js` + `src/` subdirectory (renderer, layout, particles, enzymes, state, anim, theme, dashboard, autoplay, ui) with `src/reactions/` for pathway logic. Theme toggle on `<body>` (not `<html>`). Three-state theme: Simulation/Light/Dark. Tab system and ctrl-group/row CSS in project `styles.css`. Responsive at 900px/600px.
 - **gerry**: ES6 modules (`import`/`export`), SVG rendering (not Canvas), `$` DOM cache object in `main.js`. `main.js` + `src/` subdirectory (config, hex-math, noise, hex-generator, state, metrics, renderer, input, touch, zoom, sidebar, palette, theme). Overrides `--palette-h: 56px`. Responsive at 1100px/900px/600px/440px (inherits shared toolbar/brand/sep rules).
