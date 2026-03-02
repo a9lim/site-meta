@@ -15,10 +15,14 @@ This folder is not deployed — it exists only for cross-repo design coordinatio
 
 ## Shared Design System
 
-All four projects share a unified design language via two files hosted at the root site:
+All four projects share a unified design language via six files hosted at the root site:
 
 - **`shared-tokens.js`** — Color palette, font stacks, color math helpers, CSS custom property injection
-- **`shared-base.css`** — Reset, layout tokens, glass panels, tool buttons, intro screen, tab system, form controls, responsive breakpoints
+- **`shared-utils.js`** — Utility functions: `clamp`, `lerp`, `debounce`, `throttle`, `showToast`, `escapeHtml`
+- **`shared-camera.js`** — Viewport/camera module with zoom/pan, coordinate transforms, Canvas 2D and SVG support
+- **`shared-base.css`** — Reset, layout tokens, glass panels, tool buttons, toggle switches, intro screen, form controls, responsive breakpoints, accessibility utilities
+- **`shared-info.js`** — Info tip popover system (`createInfoTip`) — hover on desktop, tap on mobile
+- **`shared-shortcuts.js`** — Keyboard shortcut registry (`initShortcuts`) with `?` help overlay modal
 
 Zero dependencies across the board — vanilla JS/HTML/CSS, no build step, no bundler.
 
