@@ -33,17 +33,18 @@ npx serve .
 
 ### Shared Files (in `a9lim.github.io/`)
 
-Seven files at the root site are loaded by sub-projects via absolute paths (`/shared-*.js`, `/shared-*.css`). The root site loads them via relative paths.
+Eight files at the root site are loaded by sub-projects via absolute paths (`/shared-*.js`, `/shared-*.css`). The root site loads them via relative paths.
 
 | File | Loaded by | Description |
 |------|-----------|-------------|
 | `shared-tokens.js` | all 4 | `_PALETTE`, `_FONT`, color math (`_r`, `_parseHex`, `_rgb2hsl`, `_hsl2hex`, `_darken`). Injects `<style id="palette-vars">` with all shared CSS custom properties. |
 | `shared-utils.js` | all 4 | `escapeHtml()`, `debounce()`, `throttle()`, `clamp()`, `lerp()`, `cubicBezier()` (Newton-Raphson), `showToast()`. |
+| `shared-tabs.js` | 3 sims | Tab switching IIFE for `.tab-btn`/`.tab-panel` sidebar tabs. Loaded as plain `<script>` (not module) so tabs work even if main module fails. |
 | `shared-camera.js` | 3 sims | `createCamera(opts)` -- zoom/pan with mouse wheel, touch pinch, middle-click pan. Coordinate transforms (`screenToWorld`/`worldToScreen`), Canvas 2D (`applyToCanvas`) and SVG (`getViewBox`/`setFromViewBox`) integration. `bindZoomButtons(opts)` wires zoom-in/out/reset buttons with animated zoom (1.25x factor, 200ms easeOutCubic). |
 | `shared-touch.js` | 3 sims | `initSwipeDismiss(panel, { onDismiss, handleSelector })` -- swipe-to-dismiss for bottom-sheet panels at <=900px. Drag handle, velocity threshold, 30% dismiss ratio. |
 | `shared-info.js` | 3 sims | `createInfoTip(triggerEl, { title, body, maxWidth })` -- `[role="tooltip"]` popovers. Hover on desktop, tap-to-toggle on mobile. Auto-positions above/below. KaTeX math rendering if loaded (guarded `typeof`). |
 | `shared-shortcuts.js` | 3 sims | `initShortcuts(shortcuts, { helpTitle })` -- `[{ key, label, group, action, when }]`. Ignores input in `<input>`/`<textarea>`/`<select>`/`contentEditable`. `?` opens help overlay, `Esc` closes. |
-| `shared-base.css` | all 4 | Reset, layout tokens, `.glass`, `.tool-btn`, tab system, toggle switches, sim layout components, intro screen, sidebar stat patterns, toast, info tip styles, shortcut overlay styles, accessibility utilities, responsive breakpoints, `prefers-reduced-motion`. |
+| `shared-base.css` | all 4 | Reset, layout tokens, `.glass`, `.tool-btn`, tab system, toggle switches, control rows/groups, form controls (range sliders, segmented controls, checkboxes), select dropdowns (`.sim-select`), overlay/dialog (`.sim-overlay`), ghost buttons, theme toggle icons, sim layout components, intro screen, sidebar stat patterns, toast, info tip styles, shortcut overlay styles, accessibility utilities, responsive breakpoints, `prefers-reduced-motion`. |
 
 ### HTML `<head>` Loading Order
 
@@ -69,7 +70,9 @@ Loading order varies slightly per project. The general pattern:
 9. `<script src="/shared-shortcuts.js"></script>`
 10. `<script src="colors.js"></script>`
 
-Note: gerry loads `colors.js` before `shared-touch.js`/`shared-info.js`/`shared-shortcuts.js` (different order). The key invariant is: `shared-tokens.js` before `colors.js`, and all shared scripts before `main.js`.
+All three sim projects also load `<script src="/shared-tabs.js"></script>` at the end of `<body>` (after sidebar markup, before `main.js`).
+
+Note: gerry loads `colors.js` before `shared-touch.js`/`shared-info.js`/`shared-shortcuts.js` (different order). The key invariant is: `shared-tokens.js` before `colors.js`, `shared-tabs.js` after sidebar DOM, and all shared scripts before `main.js`.
 
 ### colors.js Contract
 
@@ -160,8 +163,14 @@ The three sim projects share these layout conventions (root site uses traditiona
 - **Entrance animations** gated by `.app-ready` class on `<body>`
 - **`.glass`**: semi-transparent bg + blur(24px) saturate(1.3) + border + shadow
 - **`.tool-btn`**: 34x34 icon buttons with SVG defaults (root site overrides to 36x36)
-- **Tab system** (`.tabs-wrap`, `.tab-bar`, `.tab-btn`, `.tab-panels`, `.tab-panel`) -- in shared-base.css
+- **Tab system** (`.tabs-wrap`, `.tab-bar`, `.tab-btn`, `.tab-panels`, `.tab-panel`) -- CSS in shared-base.css, JS in shared-tabs.js
 - **Toggle switches** (`.tog-wrap`, `.tog`, `.tog-thumb`, `.tog-icon`) -- per-toggle color via `--tog-color`
+- **Control rows** (`.ctrl-row`, `.ctrl-sub`, `.ctrl-disabled`, `.ctrl-group`, `.panel-section`, `.ctrl-row.locked`) -- in shared-base.css
+- **Form controls** -- range sliders (`input[type=range]`), segmented controls (`.mode-toggles`/`.mode-btn`), checkbox toggles (`.checkbox-label`), slider value display (`.slider-value`) -- in shared-base.css
+- **Select dropdowns** (`.sim-select`) -- styled select element for presets/organisms -- in shared-base.css
+- **Overlay/dialog** (`.sim-overlay`, `.sim-overlay-panel`, `.sim-overlay-body`) -- centered modal with backdrop blur, responsive fullscreen at 600px -- in shared-base.css
+- **Ghost buttons** (`.ghost-btn`) -- outline-style action buttons -- in shared-base.css
+- **Theme toggle icons** (`.icon-sun`, `.icon-moon`) -- hidden by default, shown via `[data-theme]` -- in shared-base.css. Biosim overrides for 3-state theme (adds `.icon-auto`)
 - **Sidebar stat patterns** (`.group-label`, `.stats-header`, `.stat-row`, `.stat-value`, `.stat-group`)
 - **Toast notifications** (`#toast-container`, `.toast`) via `showToast()` from shared-utils.js
 - **Info tips** via `createInfoTip()` -- `?` buttons with `.info-trigger` class
