@@ -138,7 +138,7 @@ Enforced by `shared-tokens.js`:
 `--backdrop`, `--overlay-base`, `--overlay-60`, `--overlay-87`, `--overlay-full`, `--overlay-hover-12`, `--overlay-hover-25`, `--overlay-hover-19`, `--card-bg-end`, `--overlay-text`, `--overlay-text-dim`, `--overlay-tint`, `--overlay-tint-dim`, `--shimmer`, `--shimmer-subtle`
 
 **Extended palette (same both themes):**
-`--ext-blue`, `--ext-green`, `--ext-slate`, `--ext-orange`, `--ext-rose`, `--ext-purple`, `--ext-brown`, `--ext-red`, `--ext-cyan`, `--ext-yellow`
+`--ext-blue`, `--ext-green`, `--ext-slate`, `--ext-orange`, `--ext-rose`, `--ext-purple`, `--ext-brown`, `--ext-red`, `--ext-cyan`, `--ext-yellow`, `--ext-magenta`
 
 ### Layout Tokens (from shared-base.css)
 
@@ -212,7 +212,7 @@ Section headers use the body font (Noto Sans) with uppercase, 0.68rem, weight 60
 - Top-level: `accent`, `accentLight`
 - `light` sub-object: `canvas`, `panelSolid`, `elevated`, `text`, `textSecondary`, `textMuted`
 - `dark` sub-object: same keys as `light`
-- `extended` sub-object (10 cross-project colors):
+- `extended` sub-object (11 cross-project colors):
 
 | Key | Hex | Used by |
 |-----|-----|---------|
@@ -226,6 +226,7 @@ Section headers use the body font (Noto Sans) with uppercase, 0.68rem, weight 60
 | `red` | `#C05048` | biosim (Protons) |
 | `cyan` | `#4AACA0` | biosim (Electrons) |
 | `yellow` | `#CCA84C` | biosim (Photons, ATP) |
+| `magenta` | `#B4689C` | physsim (Higgs field) |
 
 ## Cross-Repo Changes
 
