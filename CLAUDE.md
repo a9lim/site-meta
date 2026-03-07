@@ -59,14 +59,14 @@ Loading order varies slightly per project. The general pattern:
 6. No `colors.js` -- root site uses shared tokens only
 
 **Sim projects (physsim, biosim, gerry):**
-1. Google Fonts `<link>` tags (+ KaTeX CSS for physsim)
+1. Google Fonts `<link>` tags (+ KaTeX CSS for physsim and biosim)
 2. `<link rel="stylesheet" href="/shared-base.css">`
 3. `<link rel="stylesheet" href="styles.css">`
 4. `<script src="/shared-tokens.js"></script>`
 5. `<script src="/shared-touch.js"></script>`
 6. `<script src="/shared-utils.js"></script>`
 7. `<script src="/shared-camera.js"></script>`
-8. `<script src="/shared-info.js"></script>` (physsim loads KaTeX scripts before this)
+8. `<script src="/shared-info.js"></script>` (physsim and biosim load KaTeX scripts before this)
 9. `<script src="/shared-shortcuts.js"></script>`
 10. `<script src="colors.js"></script>`
 
@@ -138,7 +138,7 @@ Enforced by `shared-tokens.js`:
 `--backdrop`, `--overlay-base`, `--overlay-60`, `--overlay-87`, `--overlay-full`, `--overlay-hover-12`, `--overlay-hover-25`, `--overlay-hover-19`, `--card-bg-end`, `--overlay-text`, `--overlay-text-dim`, `--overlay-tint`, `--overlay-tint-dim`, `--shimmer`, `--shimmer-subtle`
 
 **Extended palette (same both themes):**
-`--ext-blue`, `--ext-green`, `--ext-slate`, `--ext-orange`, `--ext-rose`, `--ext-purple`, `--ext-brown`, `--ext-red`, `--ext-cyan`, `--ext-yellow`, `--ext-magenta`
+`--ext-blue`, `--ext-green`, `--ext-slate`, `--ext-orange`, `--ext-rose`, `--ext-purple`, `--ext-brown`, `--ext-red`, `--ext-cyan`, `--ext-yellow`, `--ext-magenta`, `--ext-lime`, `--ext-indigo`
 
 ### Layout Tokens (from shared-base.css)
 
@@ -212,7 +212,7 @@ Section headers use the body font (Noto Sans) with uppercase, 0.68rem, weight 60
 - Top-level: `accent`, `accentLight`
 - `light` sub-object: `canvas`, `panelSolid`, `elevated`, `text`, `textSecondary`, `textMuted`
 - `dark` sub-object: same keys as `light`
-- `extended` sub-object (11 cross-project colors):
+- `extended` sub-object (13 cross-project colors):
 
 | Key | Hex | Used by |
 |-----|-----|---------|
@@ -226,7 +226,9 @@ Section headers use the body font (Noto Sans) with uppercase, 0.68rem, weight 60
 | `red` | `#C05048` | biosim (Protons) |
 | `cyan` | `#4AACA0` | biosim (Electrons) |
 | `yellow` | `#CCA84C` | biosim (Photons, ATP) |
-| `magenta` | `#B4689C` | physsim (Higgs field) |
+| `magenta` | `#B4689C` | physsim (unused — legacy) |
+| `lime` | `#82A857` | physsim (Higgs field/force) |
+| `indigo` | `#6C79AC` | physsim (Axion field/force) |
 
 ## Cross-Repo Changes
 
@@ -245,5 +247,5 @@ Each sub-folder's `CLAUDE.md` has full architecture docs. Key differences:
 
 - **a9lim.github.io** (root site): ES6 modules, traditional page layout (not floating panels). Hosts all 7 shared files. Overrides `--toolbar-h: 56px` and `.tool-btn` to 36x36. WebGL shader background. No `colors.js`. `main.js` + `src/` (projects, projects-page, card-effects, router, theme, mobile-menu, animations, shader, carousel, blog, world-map, markdown).
 - **physsim**: ES6 modules, Canvas 2D, `window.sim` global. Boris integrator with adaptive substepping. Force toggles (gravity, Coulomb, magnetic, gravitomagnetic, 1PN relativity). Barnes-Hut O(N log N) toggle. Signal delay (light-cone solver). Radiation (Landau-Lifshitz). 4-tab sidebar (Settings/Engine/Stats/Particle). KaTeX for math tooltips.
-- **biosim**: ES6 modules, Canvas 2D, `_BASE`/`_ROLE`/`_THEME` color pipeline. Allosteric regulation gates enzyme reactions. Three-state theme (Simulation/Light/Dark). Tab system for sidebar (Controls/Stats/Reference).
+- **biosim**: ES6 modules, Canvas 2D, `_BASE`/`_ROLE`/`_THEME` color pipeline. Allosteric regulation gates enzyme reactions. Three-state theme (Simulation/Light/Dark). Tab system for sidebar (Controls/Stats/Reference). KaTeX for math in reference pages.
 - **gerry**: ES6 modules, SVG rendering, `$` DOM cache. Hex-tile map with axial coordinates. 3-party efficiency gap, partisan symmetry, competitive districts metrics. Plan save/load (localStorage + JSON). Brush sizes (1/3/7 hex radius). Auto-fill. Overrides `--palette-h: 56px`.
