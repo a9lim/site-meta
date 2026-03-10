@@ -33,12 +33,13 @@ npx serve .
 
 ### Shared Files (in `a9lim.github.io/`)
 
-Eight files at the root site are loaded by sub-projects via absolute paths (`/shared-*.js`, `/shared-*.css`). The root site loads them via relative paths.
+Nine files at the root site are loaded by sub-projects via absolute paths (`/shared-*.js`, `/shared-*.css`). The root site loads them via relative paths.
 
 | File | Loaded by | Description |
 |------|-----------|-------------|
 | `shared-tokens.js` | all 4 | `_PALETTE`, `_FONT`, color math (`_r`, `_parseHex`, `_rgb2hsl`, `_hsl2hex`, `_darken`). Injects `<style id="palette-vars">` with all shared CSS custom properties. |
 | `shared-utils.js` | all 4 | `escapeHtml()`, `debounce()`, `throttle()`, `clamp()`, `lerp()`, `cubicBezier()` (Newton-Raphson), `showToast()`. |
+| `shared-haptics.js` | all 4 | `_haptics.trigger(type)` -- haptic feedback via Web Vibration API. Named presets: `light`/`medium`/`heavy` (impact), `success`/`warning`/`error` (notification), `selection` (discrete stepping), `buzz`/`nudge`/`soft`/`rigid` (extra). Silently no-ops on unsupported platforms. |
 | `shared-tabs.js` | 3 sims | Tab switching IIFE for `.tab-btn`/`.tab-panel` sidebar tabs. Loaded as plain `<script>` (not module) so tabs work even if main module fails. |
 | `shared-camera.js` | 3 sims | `createCamera(opts)` -- zoom/pan with mouse wheel, touch pinch, middle-click pan. Coordinate transforms (`screenToWorld`/`worldToScreen`), Canvas 2D (`applyToCanvas`) and SVG (`getViewBox`/`setFromViewBox`) integration. `bindZoomButtons(opts)` wires zoom-in/out/reset buttons with animated zoom (1.25x factor, 200ms easeOutCubic). |
 | `shared-touch.js` | 3 sims | `initSwipeDismiss(panel, { onDismiss, handleSelector })` -- swipe-to-dismiss for bottom-sheet panels at <=900px. Drag handle, velocity threshold, 30% dismiss ratio. |
@@ -54,9 +55,10 @@ Loading order varies slightly per project. The general pattern:
 1. Google Fonts `<link>` tags
 2. `<script src="shared-tokens.js"></script>` (relative path)
 3. `<script src="shared-utils.js"></script>` (relative path)
-4. `<link rel="stylesheet" href="shared-base.css">`
-5. `<link rel="stylesheet" href="styles.css">`
-6. No `colors.js` -- root site uses shared tokens only
+4. `<script src="shared-haptics.js"></script>` (relative path)
+5. `<link rel="stylesheet" href="shared-base.css">`
+6. `<link rel="stylesheet" href="styles.css">`
+7. No `colors.js` -- root site uses shared tokens only
 
 **Sim projects (physsim, biosim, gerry):**
 1. Google Fonts `<link>` tags (+ KaTeX CSS for physsim and biosim)
@@ -65,10 +67,11 @@ Loading order varies slightly per project. The general pattern:
 4. `<script src="/shared-tokens.js"></script>`
 5. `<script src="/shared-touch.js"></script>`
 6. `<script src="/shared-utils.js"></script>`
-7. `<script src="/shared-camera.js"></script>`
-8. `<script src="/shared-info.js"></script>` (physsim and biosim load KaTeX scripts before this)
-9. `<script src="/shared-shortcuts.js"></script>`
-10. `<script src="colors.js"></script>`
+7. `<script src="/shared-haptics.js"></script>`
+8. `<script src="/shared-camera.js"></script>`
+9. `<script src="/shared-info.js"></script>` (physsim and biosim load KaTeX scripts before this)
+10. `<script src="/shared-shortcuts.js"></script>`
+11. `<script src="colors.js"></script>`
 
 All three sim projects also load `<script src="/shared-tabs.js"></script>` at the end of `<body>` (after sidebar markup, before `main.js`).
 
